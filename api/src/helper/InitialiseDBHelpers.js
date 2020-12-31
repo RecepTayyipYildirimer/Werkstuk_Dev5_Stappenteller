@@ -22,7 +22,6 @@ const func = {
 
     })
 
-
     await db.schema.hasTable('recordsCategory').then(async (exists) => {
       if (!exists) {
         await db.schema
