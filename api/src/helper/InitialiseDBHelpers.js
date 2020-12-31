@@ -1,19 +1,19 @@
 
 const func = {
   initialiseTables: async function (db) {
-    await db.schema.hasTable('records').then(async (exists) => {
+    await db.schema.hasTable('stappen').then(async (exists) => {
       if (!exists) {
         await db.schema
           .createTable('records', (table) => {
             table.increments().primary();
             table.string('uuid');
-            table.string('question');
-            table.string('answer');
-            table.string('user_id');
+            table.string('stappen');
+            table.string('antwoord');
+            table.string('gewicht');
             table.timestamps(true, true);
           })
           .then(async () => {
-            console.log('created table records');
+            console.log('created table stappen');
           })
           .catch((e) => {
             // console.error(e)
@@ -23,20 +23,20 @@ const func = {
     })
 
 
-    await db.schema.hasTable('users').then(async (exists) => {
+    await db.schema.hasTable('recordsCategory').then(async (exists) => {
       if (!exists) {
         await db.schema
-          .createTable('users', (table) => {
+          .createTable('recordsCategory', (table) => {
             table.increments().primary();
             table.uuid('uuid');
-            table.string('email');
-            table.string('username');
-            table.string('password');
-            table.string('roles');
+            table.string('mager');
+            table.string('normaal');
+            table.string('zwaar');
+            table.string('overweight');
             table.timestamps(true, true);
           })
           .then(async () => {
-            console.log('created table users');
+            console.log('created table recordsCategory');
           })
           .catch((e) => {
             // console.error(e)
