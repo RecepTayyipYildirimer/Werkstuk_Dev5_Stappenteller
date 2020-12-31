@@ -1,50 +1,45 @@
-
+/*
 const func = {
   initialiseTables: async function (db) {
-    await db.schema.hasTable('stappen').then(async (exists) => {
+    await db.schema.hasTable('numbers').then(async (exists) => {
       if (!exists) {
         await db.schema
-          .createTable('records', (table) => {
+          .createTable('numbers', (table) => {
             table.increments().primary();
             table.string('uuid');
-            table.string('stappen');
-            table.string('antwoord');
-            table.string('gewicht');
+            table.string('number');
+            table.string('answer');
+            table.string('category')
             table.timestamps(true, true);
           })
           .then(async () => {
-            console.log('created table stappen');
+            console.log('created table numbers');
           })
           .catch((e) => {
             // console.error(e)
           })
       }
-
     })
-
-
-    await db.schema.hasTable('recordsCategory').then(async (exists) => {
+    await db.schema.hasTable('numbersCategory').then(async (exists) => {
       if (!exists) {
         await db.schema
-          .createTable('recordsCategory', (table) => {
+          .createTable('numbersCategory', (table) => {
             table.increments().primary();
             table.uuid('uuid');
-            table.string('mager');
-            table.string('normaal');
-            table.string('zwaar');
-            table.string('overweight');
+            table.string('math');
+            table.string('trivia');
+            table.string('date');
             table.timestamps(true, true);
           })
           .then(async () => {
-            console.log('created table recordsCategory');
+            console.log('created table numbersCategory');
           })
           .catch((e) => {
             // console.error(e)
           })
       }
-      // db.schema.raw("ALTER SEQUENCE seq RESTART WITH (SELECT (max(id) + 1) FROM users);")
     })
   }
 }
-
 module.exports = func
+*/
