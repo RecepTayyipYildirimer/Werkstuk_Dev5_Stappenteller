@@ -36,7 +36,7 @@ app.get('/', (req, res) => {
 
 app.get('/stappen', async (req, res) => {
   const result = await pg
-    .select(['uuid', 'stappen', 'antwoord','gewicht' , 'created_at','updated_at'])
+    .select(['uuid', 'stappen', 'antwoord','category' , 'created_at','updated_at'])
     .from('stappen');
   res.json({
     res: result,
@@ -46,7 +46,7 @@ app.get('/stappen', async (req, res) => {
 app.post('/stap-add1', async (req, res) => {
   const uuid = Helpers.generateUUID();
   const result = await pg
-    .insert({ uuid, stappen: `5000`, gewicht: `small` },)
+    .insert({ uuid, stappen: `4000`, antwoord: 'je moet nog 1000 stappen afleggen vandaag', category: `small` },)
     .table('stappen')
     .returning('*')
     .then((res) => {
@@ -55,6 +55,17 @@ app.post('/stap-add1', async (req, res) => {
   console.log('add 1 stap entry');
   console.log(result);
   res.send(result);
+});
+
+// Get specific stap
+app.get('/stappen/:uuid', async (req, res) => {
+  const result = await pg
+    .select(['uuid', 'stappen', 'antwoord', 'category', 'created_at','updated_at'])
+    .from('stappen')
+    .where({ uuid: req.params.uuid });
+  res.json({
+    res: result,
+  });
 });
 
 
@@ -91,7 +102,7 @@ async function initialiseTables() {
           table.uuid('uuid');
           table.string('stappen');
           table.string('antwoord');
-          table.string('gewicht');
+          table.string('category');
           table.timestamps(true, true);
         })
         .then(async () => {
