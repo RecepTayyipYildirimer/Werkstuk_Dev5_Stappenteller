@@ -46,6 +46,7 @@ app.get('/stappen', async (req, res) => {
 app.post('/stap-add1', async (req, res) => {
   const uuid = Helpers.generateUUID();
   const result = await pg
+
     .insert({ uuid, stappen: `4000`, antwoord: 'je moet nog 1000 stappen afleggen vandaag', category: `small` },)
     .table('stappen')
     .returning('*')
@@ -57,7 +58,20 @@ app.post('/stap-add1', async (req, res) => {
   res.send(result);
 });
 
-// Get specific stap
+//DELETE Specific record
+app.delete('/stappenDelete/:uuid', async (req, res) => {
+  const result = await pg
+    .table('stappen')
+    .where({ uuid: req.params.uuid})
+    .del(['id','uuid', 'stappen', 'antwoord', 'category', 'created_at','updated_at'])
+    .then((res) => {
+      return res;
+    });
+  console.log(result);
+  res.send(result);
+});
+
+// Get specific record
 app.get('/stappen/:uuid', async (req, res) => {
   const result = await pg
     .select(['uuid', 'stappen', 'antwoord', 'category', 'created_at','updated_at'])
@@ -67,8 +81,6 @@ app.get('/stappen/:uuid', async (req, res) => {
     res: result,
   });
 });
-
-
 
 
 app.get('/join', async (req, res) => {
