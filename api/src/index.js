@@ -25,6 +25,10 @@ app.get('/', (req, res) => {
   res.send('Deployed!')
 })
 
+/**  get all records from table stappen
+ * @params 
+ * @returns all records from table stappen
+ */
 app.get('/stappen', async (req, res) => {
   const result = await pg
     .select(['uuid', 'stappen', 'antwoord','category' , 'created_at','updated_at'])
@@ -34,6 +38,10 @@ app.get('/stappen', async (req, res) => {
   });
 });
 
+/**  post a predefined record to table stappen
+ * @params 
+ * @returns all records from table stappen
+ */
 app.post('/stap', async (req, res) => {
   const uuid = Helpers.generateUUID();
   const result = await pg
@@ -49,7 +57,10 @@ app.post('/stap', async (req, res) => {
   res.send(result);
 });
 
-//DELETE Specific record
+/**  delete a specific record from table stappen
+ * @params uuid
+ * @returns all records from table stappen
+ */
 app.delete('/stappen/:uuid', async (req, res) => {
   const result = await pg
     .table('stappen')
@@ -62,7 +73,10 @@ app.delete('/stappen/:uuid', async (req, res) => {
   res.send(result);
 });
 
-// Get specific record
+/**  get specific record from table stappen
+ * @params uuid
+ * @returns specific record
+ */
 app.get('/stap/:uuid', async (req, res) => {
   const result = await pg
     .select(['uuid', 'stappen', 'antwoord', 'category', 'created_at','updated_at'])
@@ -71,6 +85,27 @@ app.get('/stap/:uuid', async (req, res) => {
   res.json({
     res: result,
   });
+});
+
+/**  update predefined antwoord in table stappen by uuid
+ * @params uuid
+ * @returns sends status 200 or 404 on error
+ */
+app.put('/stap/:uuid', async (req, res) => {
+  const result = await pg
+  .table('stappen')
+  .where({ uuid: req.params.uuid})
+    .update({ antwoord: 'Genoeg gestapt voor vandaag', category:'small' })
+    .returning('*')
+    .then(function (result) {
+      console.log(result);
+      res.json(result);
+      res.status(200).send();
+    })
+    .catch((e) => {
+      console.log(e);
+      res.status(404).send();
+    });
 });
 
 
@@ -84,12 +119,6 @@ app.get('/join', async (req, res) => {
     })
 
 })
-
-/**
-* [description]
-* @params:
-* @returns: 
-*/
 
 if (process.env.NODE_ENV !== 'test') {
   app.listen(process.env.PORT || 3001, () => console.log(`Listening on port ${process.env.PORT || 3001}`));
