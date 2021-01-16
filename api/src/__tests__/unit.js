@@ -1,4 +1,4 @@
-const Helpers = require('./../helper/AuthHelper.js')
+const Helpers = require('./../utils/helpers.js')
 
 describe('helpers test', () => {
     test('check if function generates something', () => {
