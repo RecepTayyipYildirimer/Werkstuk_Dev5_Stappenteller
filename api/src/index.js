@@ -6,15 +6,6 @@ const jwtToken = require('jsontokens');
 const Helpers = require('./utils/helpers.js');
 
 
-
-const DatabaseHelper = require('./helper/DatabaseHelper');
-const InitialiseDBHelpers = require('./helper/InitialiseDBHelpers')
-const UUIDHelper = require('./helper/UuidHelpers');
-/*
-const AuthHelper = require('./helper/AuthHelper');
-InitialiseDBHelpers.initialiseTables(DatabaseHelper);
-*/
-
 const pg = require('knex')({
   client: 'pg',
   version: '9.6',
@@ -43,7 +34,7 @@ app.get('/stappen', async (req, res) => {
   });
 });
 
-app.post('/stap-add1', async (req, res) => {
+app.post('/stap', async (req, res) => {
   const uuid = Helpers.generateUUID();
   const result = await pg
 
@@ -59,7 +50,7 @@ app.post('/stap-add1', async (req, res) => {
 });
 
 //DELETE Specific record
-app.delete('/stappenDelete/:uuid', async (req, res) => {
+app.delete('/stappen/:uuid', async (req, res) => {
   const result = await pg
     .table('stappen')
     .where({ uuid: req.params.uuid})
@@ -72,7 +63,7 @@ app.delete('/stappenDelete/:uuid', async (req, res) => {
 });
 
 // Get specific record
-app.get('/stappen/:uuid', async (req, res) => {
+app.get('/stap/:uuid', async (req, res) => {
   const result = await pg
     .select(['uuid', 'stappen', 'antwoord', 'category', 'created_at','updated_at'])
     .from('stappen')
@@ -94,9 +85,10 @@ app.get('/join', async (req, res) => {
 
 })
 
-/*
-*
-*
+/**
+* [description]
+* @params:
+* @returns: 
 */
 
 if (process.env.NODE_ENV !== 'test') {
