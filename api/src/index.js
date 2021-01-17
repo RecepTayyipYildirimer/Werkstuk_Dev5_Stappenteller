@@ -46,7 +46,19 @@ app.post('/stap', async (req, res) => {
   const uuid = Helpers.generateUUID();
   const result = await pg
 
-    .insert({ uuid, stappen: `4000`, antwoord: 'je moet nog 1000 stappen afleggen vandaag', category: `small` },)
+    .insert([
+      //{ uuid, stappen: `3000`, antwoord: 'je moet nog 2000 stappen afleggen vandaag', category: `small` },
+      //{ uuid, stappen: `4000`, antwoord: 'je moet nog 1000 stappen afleggen vandaag', category: `small` },
+      //{ uuid, stappen: `5000`, antwoord: 'Genoeg voor vandaag', category: `small` },
+      //{ uuid, stappen: `4000`, antwoord: 'je moet nog 3000 stappen afleggen vandaag', category: `normaal` },
+      //{ uuid, stappen: `5000`, antwoord: 'je moet nog 2000 stappen afleggen vandaag', category: `normaal` },
+      //{ uuid, stappen: `7000`, antwoord: 'Genoeg voor vandaag', category: `normaal` },
+      //{ uuid, stappen: `4000`, antwoord: 'je moet nog 4000 stappen afleggen vandaag', category: `overgewicht` },
+      { uuid, stappen: `8000`, antwoord: 'Genoeg voor vandaag', category: `overgewicht` },
+
+    ])
+      
+      
     .table('stappen')
     .returning('*')
     .then((res) => {
@@ -109,6 +121,75 @@ app.put('/stap/:uuid', async (req, res) => {
 });
 
 
+/**  post records to table category
+ * @params 
+ * @returns all records from table category
+ */
+app.post('/category', async (req, res) => {
+  const uuid = Helpers.generateUUID();
+  const result = await pg
+
+    .insert([
+      //{ uuid, category:"small"},
+      //{ uuid, category:"normaal"},
+      { uuid, category:"overgewicht"},
+    ])
+    .table('categories')
+    .returning('*')
+    .then((res) => {
+      return res;
+    });
+  console.log('add all category entry');
+  console.log(result);
+  res.send(result);
+});
+
+/**  get all records from table category
+ * @params 
+ * @returns all records from table category
+ */
+app.get('/category', async (req, res) => {
+  const result = await pg
+    .select(['uuid', 'category', 'created_at','updated_at'])
+    .from('categories');
+  res.json({
+    res: result,
+  });
+});
+
+
+/**  delete specific category by the category from categories table
+ * @params category
+ * @returns deletes the category from both tables categories and stappen
+ */
+
+app.delete('/category/:category', async (req, res) => {
+  const result = await pg
+    .table('categories')
+    .where('category', req.params.category)
+    .del(['id', 'uuid', 'category'])
+    .then((res) => {
+      return res; 
+    })
+
+  console.log('deleted cat.');
+  console.log(result);
+  res.send(result);
+
+  await pg
+  .table('stappen')
+  .where('category', req.params.category)
+  .del(['id', 'uuid', 'stappen', 'antwoord','category', 'created_at','updated_at'])
+  .then((res) => {
+    return res; 
+  })
+
+console.log('deleted record.');
+console.log(result);
+res.send(result);
+});
+
+
 app.get('/join', async (req, res) => {
   await DatabaseHelper
     .table('items')
@@ -145,19 +226,17 @@ async function initialiseTables() {
 
     }
   });
-  await pg.schema.hasTable('gewichtCategory').then(async (exists) => {
+  await pg.schema.hasTable('categories').then(async (exists) => {
     if (!exists) {
       await pg.schema
-        .createTable('gewichtCategory', (table) => {
+        .createTable('categories', (table) => {
           table.increments().primary();
           table.uuid('uuid');
-          table.string('small');
-          table.string('normaal');
-          table.string('overgewicht');
+          table.string('category');
           table.timestamps(true, true);
         })
         .then(async () => {
-          console.log('created table gewichtCategory');
+          console.log('created table categories');
           
         });
 
